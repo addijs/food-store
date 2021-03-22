@@ -2,8 +2,7 @@ package br.edu.ifpb.padroes.service.order;
 
 import br.edu.ifpb.padroes.domain.Order;
 import br.edu.ifpb.padroes.service.log.LogService;
-import br.edu.ifpb.padroes.service.log.handlers.LogHandler;
-import br.edu.ifpb.padroes.service.log.handlers.LogHandlerFile;
+import br.edu.ifpb.padroes.service.payment.impl.Payment;
 import br.edu.ifpb.padroes.service.payment.PaymentService;
 import br.edu.ifpb.padroes.service.mail.EmailNotification;
 
@@ -21,10 +20,10 @@ public class OrderManager {
 
     private LogService logService = new LogService();
 
-    public void payOrder(PaymentService.PaymentType paymentType) {
+    public void payOrder(Payment paymentStrategy) {
         order.setStatus(Order.OrderStatus.IN_PROGRESS);
         try {
-            paymentService.doPayment(paymentType);
+            paymentService.doPayment(paymentStrategy);
             order.setStatus(Order.OrderStatus.PAYMENT_SUCCESS);
             emailNotification.sendMailNotification(String.format("Order %d completed successfully", order.getId()));
             logService.info("payment finished");
