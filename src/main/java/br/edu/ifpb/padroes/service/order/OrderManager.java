@@ -1,8 +1,9 @@
 package br.edu.ifpb.padroes.service.order;
 
 import br.edu.ifpb.padroes.domain.Order;
-import br.edu.ifpb.padroes.service.log.LogHandler;
 import br.edu.ifpb.padroes.service.log.LogService;
+import br.edu.ifpb.padroes.service.log.handlers.LogHandler;
+import br.edu.ifpb.padroes.service.log.handlers.LogHandlerFile;
 import br.edu.ifpb.padroes.service.payment.PaymentService;
 import br.edu.ifpb.padroes.service.mail.EmailNotification;
 
@@ -18,7 +19,7 @@ public class OrderManager {
 
     private PaymentService paymentService = new PaymentService();
 
-    private LogService logService = new LogService(new LogHandler(LogHandler.LogHandlerType.FILE));
+    private LogService logService = new LogService();
 
     public void payOrder(PaymentService.PaymentType paymentType) {
         order.setStatus(Order.OrderStatus.IN_PROGRESS);
