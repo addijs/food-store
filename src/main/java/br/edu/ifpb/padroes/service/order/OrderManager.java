@@ -22,23 +22,15 @@ public class OrderManager {
   private LogService logService = new LogService();
 
   public void payOrder(Payment paymentStrategy) {
-    order.setStatus(Order.OrderStatus.IN_PROGRESS);
-    try {
-      paymentService.doPayment(paymentStrategy);
-      order.setStatus(Order.OrderStatus.PAYMENT_SUCCESS);
-      events.notify("mail", String.format("Order %d completed successfully", order.getId()));
-      logService.info("payment finished");
-    } catch (Exception e) {
-      logService.error("payment refused");
-      order.setStatus(Order.OrderStatus.PAYMENT_REFUSED);
-      events.notify("mail", String.format("Order %d refused", order.getId()));
-    }
+    order.doPaymentOrder(paymentService, paymentStrategy);
+    order.sendNotification(order, events);
+    order.emitLog(order, logService);
   }
 
   public void cancelOrder() {
-    order.setStatus(Order.OrderStatus.CANCELED);
-    events.notify("mail", String.format("Order %d canceled", order.getId()));
-    logService.debug(String.format("order %d canceled", order.getId()));
+    order.hasBeenCanceled();
+    order.sendNotification(order, events);
+    order.emitLog(order, logService);
   }
 
 }
